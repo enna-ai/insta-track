@@ -67,19 +67,21 @@ func getFollowData(stringListData []StringListData) []FollowerData {
 }
 
 func FormatTable(followings, followers []FollowerData) {
-	followerStatus := make(map[string]struct{})
-
+	followerStatus := make(map[string]bool)
 	for _, follower := range followers {
-		followerStatus[follower.Value] = struct{}{}
+		followerStatus[follower.Value] = true
 	}
 
 	table := tablewriter.NewWriter(os.Stdout)
 	table.SetHeader([]string{"Username", "Following Me?"})
 
 	for _, following := range followings {
-		_, isFollower := followerStatus[following.Value]
+		isFollower := followerStatus[following.Value]
+
 		followerStatusStr := fmt.Sprintf("%v", isFollower)
-		
+
 		table.Append([]string{following.Value, followerStatusStr})
 	}
+
+	table.Render()
 }
